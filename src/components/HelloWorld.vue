@@ -1,123 +1,106 @@
 <template>
   <div class="hello">
+    <img alt="Vue logo" src="../assets/logo.png" />
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript"
-          target="_blank"
-          rel="noopener"
-          >typescript</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest"
-          target="_blank"
-          rel="noopener"
-          >unit-jest</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-e2e-cypress"
-          target="_blank"
-          rel="noopener"
-          >e2e-cypress</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+    <Parcel
+      v-on:parcelMounted="parcelMounted()"
+      v-on:parcelUpdated="parcelUpdated()"
+      :config="parcelConfig"
+      :mountParcel="mountParcel"
+      :wrapWith="wrapWith"
+      :wrapClass="wrapClass"
+      :wrapStyle="wrapStyle"
+      :parcelProps="getParcelProps()"
+    />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
+import Parcel from 'single-spa-vue/parcel'
+import { mountRootParcel } from 'single-spa'
 
 export default defineComponent({
   name: "HelloWorld",
   props: {
     msg: String,
   },
+  components: {
+    Parcel
+  },data() {
+    return {
+      /*
+        parcelConfig (object, required)
+
+        The parcelConfig is an object, or a promise that resolves with a parcel config object.
+        The object can originate from within the current project, or from a different
+        microfrontend via cross microfrontend imports. It can represent a Vue component,
+        or a React / Angular component.
+        https://single-spa.js.org/docs/recommended-setup#cross-microfrontend-imports
+
+        Vanilla js object:
+        parcelConfig: {
+          async mount(props) {},
+          async unmount(props) {}
+        }
+
+        // React component
+        parcelConfig: singleSpaReact({...})
+
+        // cross microfrontend import is shown below
+      */
+      parcelConfig: window.System.import('parcels-components-nav').then(res => res),
+
+
+      /*
+        mountParcel (function, required)
+
+        The mountParcel function can be either the current Vue application's mountParcel prop or
+        the globally available mountRootParcel function. More info at
+        http://localhost:3000/docs/parcels-api#mountparcel
+      */
+      mountParcel: mountRootParcel,
+
+      /*
+        wrapWith (string, optional)
+
+        The wrapWith string determines what kind of dom element will be provided to the parcel.
+        Defaults to 'div'
+      */
+      wrapWith: 'div',
+
+      /*
+        wrapClass (string, optional)
+
+        The wrapClass string is applied to as the CSS class for the dom element that is provided to the parcel
+      */
+      wrapClass: "bg-red",
+
+      /*
+        wrapStyle (object, optional)
+
+        The wrapStyle object is applied to the dom element container for the parcel as CSS styles
+      */
+      wrapStyle: {
+        outline: '1px solid red'
+      },
+    }
+  },
+  methods: {
+    // These are the props passed into the parcel
+    getParcelProps() {
+      return {
+        text: `Hello world`
+      }
+    },
+    // Parcels mount asynchronously, so this will be called once the parcel finishes mounting
+    parcelMounted() {
+      console.log("parcel mounted");
+    },
+    parcelUpdated() {
+      console.log("parcel updated");
+    }
+  }
 });
 </script>
 

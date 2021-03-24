@@ -24,7 +24,7 @@ module.exports = [
     },
 
     resolve: {
-      extensions: [".vue", ".jsx", ".js", ".json"],
+      extensions: [".vue", ".jsx", ".js", ".ts", ".json"],
     },
 
     module: {
@@ -32,6 +32,11 @@ module.exports = [
         {
           test: /\.vue$/,
           use: "vue-loader",
+        },
+        {
+          test: /\.ts$/,
+          loader: 'ts-loader',
+          options: { appendTsSuffixTo: [/\.vue$/] }
         },
         {
           test: /\.png$/,
@@ -53,6 +58,10 @@ module.exports = [
       ],
     },
 
+    externals:{
+      "System": "home/System"
+    },
+
     plugins: [
       new MiniCssExtractPlugin({
         filename: "[name].css",
@@ -63,6 +72,9 @@ module.exports = [
         filename: "remoteEntry.js",
         exposes: {
           "./AppModule": "./src/main.ts",
+        },
+        remotes: {
+          home: 'home',
         },
       }),
       new HtmlWebpackPlugin({
