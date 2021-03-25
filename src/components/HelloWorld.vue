@@ -17,7 +17,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import Parcel from 'single-spa-vue/parcel'
+import Parcel from 'single-spa-vue/dist/esm/parcel'
 import { mountRootParcel } from 'single-spa'
 
 export default defineComponent({

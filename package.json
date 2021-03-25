@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "v-serve": "vue-cli-service serve",
+    "v-serve": "vue-cli-service serve --port 3002",
     "v-build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
@@ -13,11 +13,8 @@
     "build": "webpack --mode production",
     "serve": "serve dist -p 3002"
   },
-  "resolutions": {
-    "webpack": "^5.28.0",
-    "webpack-cli": "^4.5.0"
-  },
   "dependencies": {
+    "@babel/helper-compilation-targets": "^7.13.10",
     "core-js": "^3.6.5",
     "single-spa-vue": "^2.2.0",
     "vue": "^3.0.0",
@@ -27,8 +24,6 @@
   "devDependencies": {
     "vue-template-compiler": "^2.6.12",
     "ts-loader": "^8.0.18",
-    "webpack": "^5.28.0",
-    "webpack-cli": "^4.5.0",
     "html-webpack-plugin": "^5.3.1",
     "raw-loader": "4.0.2",
     "style-loader": "2.0.0",
